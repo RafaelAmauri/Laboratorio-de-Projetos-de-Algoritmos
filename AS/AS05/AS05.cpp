@@ -1,7 +1,7 @@
-// Aluno: Rafael Amauri Diniz Augusto -- 651047
-// Tarefa: AS05 - Componentes Conexos
-// Professor: Wladmir Cardoso
-// Matéria: LPA
+// Autor: Rafael Amauri
+// Tarefa: Componentes Conexos
+// ID da Tarefa: 1082
+// URL: https://www.beecrowd.com.br/judge/pt/problems/view/1082
 // Complexidade: O(V^2), onde V é o número de vértices
 
 

@@ -1,7 +1,7 @@
-// Aluno: Rafael Amauri Diniz Augusto -- 651047
-// Tarefa: AS07 - Força Bruta
-// Professor: Wladmir Cardoso
-// Matéria: LPA
+// Autor: Rafael Amauri
+// Tarefa: Problema dos Pares Mais Próximos
+// ID da Tarefa: 1295
+// URL: https://www.beecrowd.com.br/judge/pt/problems/view/1295
 // Complexidade: O(N^2), onde N é o número de pares de coordenadas
 
 

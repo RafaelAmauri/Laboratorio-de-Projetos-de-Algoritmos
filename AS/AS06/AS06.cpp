@@ -1,9 +1,14 @@
-// Aluno: Rafael Amauri Diniz Augusto -- 651047
-// Tarefa: AS06 - Penalização
-// Professor: Wladmir Cardoso
-// Matéria: LPA
+// Autor: Rafael Amauri
+// Tarefa: Penalização
+// ID da Tarefa: 2225
+// URL: https://www.beecrowd.com.br/judge/pt/problems/view/2225
 // Complexidade: O(V^2), onde V é o número de vértices
 
+
+/*
+// NÃO SEI SE ESTÁ FUNCIONANDO!
+// NÃO CHEGUEI A MANDAR ESSA TAREFA PARA CORREÇÃO!
+*/
 
 #include <iostream>
 #include <map>

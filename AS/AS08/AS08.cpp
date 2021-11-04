@@ -1,8 +1,8 @@
-// Aluno: Rafael Amauri Diniz Augusto -- 651047
-// Tarefa: AS08 - Divisão e Conquista
-// Professor: Wladmir Cardoso
-// Matéria: LPA
-// Complexidade: O(n logn), onde n é o número de elementos no array
+// Autor: Rafael Amauri
+// Tarefa: Bolhas e Baldes
+// ID da Tarefa: 1088
+// URL: https://www.beecrowd.com.br/judge/pt/problems/view/1088
+// Complexidade: O(N logN), onde N é o número de elementos no array
 
 #include <iostream>
 

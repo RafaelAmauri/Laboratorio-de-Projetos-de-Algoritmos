@@ -1,7 +1,7 @@
-// Aluno: Rafael Amauri Diniz Augusto -- 651047
-// Tarefa: AS02 - LEDs
-// Professor: Wladmir Cardoso
-// Matéria: LPA
+// Autor: Rafael Amauri
+// Tarefa: LED
+// ID da Tarefa: 1168
+// URL: https://www.beecrowd.com.br/judge/pt/problems/view/1168
 // Complexidade: O(N), onde N é o número de dígitos totais
 
 #include <iostream>

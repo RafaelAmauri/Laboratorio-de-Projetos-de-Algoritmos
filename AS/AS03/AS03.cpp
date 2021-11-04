@@ -1,7 +1,7 @@
-// Aluno: Rafael Amauri Diniz Augusto -- 651047
-// Tarefa: AS03 - Subsequências
-// Professor: Wladmir Cardoso
-// Matéria: LPA
+// Autor: Rafael Amauri
+// Tarefa: Subsequências
+// ID da Tarefa: 1507
+// URL: https://www.beecrowd.com.br/judge/pt/problems/view/1507
 // Complexidade: O(N*M), onde N é o número de letras na string maior e M é o número de letras na sub-sequência
 
 

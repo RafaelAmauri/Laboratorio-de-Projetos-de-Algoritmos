@@ -1,7 +1,7 @@
-// Aluno: Rafael Amauri Diniz Augusto -- 651047
-// Tarefa: AS09 - Maçãs
-// Professor: Wladmir Cardoso
-// Matéria: LPA
+// Autor: Rafael Amauri
+// Tarefa: Maçãs
+// ID da Tarefa: 1517
+// URL: https://www.beecrowd.com.br/judge/pt/problems/view/1517
 // Complexidade: O(N^2), onde N é o número de macas que caem
 
 

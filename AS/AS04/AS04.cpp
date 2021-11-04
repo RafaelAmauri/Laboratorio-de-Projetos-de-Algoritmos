@@ -1,7 +1,7 @@
-// Aluno: Rafael Amauri Diniz Augusto -- 651047
-// Tarefa: AS04 - Roteadores
-// Professor: Wladmir Cardoso
-// Matéria: LPA
+// Autor: Rafael Amauri
+// Tarefa: Roteadores
+// ID da Tarefa: 1774
+// URL: https://www.beecrowd.com.br/judge/pt/problems/view/1774
 // Complexidade: O(V^2), onde V é o número de vértices
 
 #include <iostream>

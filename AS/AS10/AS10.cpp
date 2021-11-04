@@ -1,7 +1,7 @@
-// Aluno: Rafael Amauri Diniz Augusto -- 651047
-// Tarefa: AS10 - Notas e Moedas
-// Professor: Wladmir Cardoso
-// Matéria: LPA
+// Autor: Rafael Amauri
+// Tarefa: Notas e Moedas
+// ID da Tarefa: 1021
+// URL: https://www.beecrowd.com.br/judge/pt/problems/view/1021
 // Complexidade: O(N), onde N é o número de moedas e notas totais
 
 

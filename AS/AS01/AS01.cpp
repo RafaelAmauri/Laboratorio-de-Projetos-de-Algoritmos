@@ -1,7 +1,11 @@
-// Rafael Amauri Diniz Augusto -- 651047
+// Autor: Rafael Amauri
+// Tarefa: Soma de Fatoriais
+// ID da Tarefa: 1161
+// URL: https://www.beecrowd.com.br/judge/pt/problems/view/1161
 // Complexidade: O(N), onde N é o número de pares de números na entrada
 
 #include <iostream>
+
 
 // Retorna um unsigned long int, pois os valores podem ser muito grandes
 unsigned long int fac(int num)
