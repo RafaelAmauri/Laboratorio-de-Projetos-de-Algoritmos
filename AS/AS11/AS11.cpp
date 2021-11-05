@@ -2,7 +2,7 @@
 // Tarefa: AS11 - Backtracking
 // Professor: Wladmir Cardoso
 // Matéria: LPA
-// Complexidade: O(largura*comprimento), onde largura e comprimento são as dimensões do tabuleiro
+// Complexidade: O(N*M), onde largura e comprimento são as dimensões do tabuleiro
 
 
 #include <bits/stdc++.h>
@@ -10,33 +10,41 @@
 
 #define MAX_SIZE 1024
 
-int orig, id;
-
-int aux1[16][1<<16];
-int aux2[1<<4][1<<4];
+int array_aux1[16][1<<16];
+int array_aux2[1<<4][1<<4];
 
 
-std::vector<int> peca, dist;
+// Realiza uma busca pelos dois tabuleiros utilizando o algoritmo BFS
+void search(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], 
+        char tabuleiro_char[MAX_SIZE][MAX_SIZE], int comprimento, 
+        int largura);
 
-// Realiza uma busca por BFS utilizando os dois tabuleiros
-void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_SIZE][MAX_SIZE], int comprimento, int largura);
 
-// Recebe 
-int tsp(int aux, int vis, int quant_peoes);
+// Faz uma verificacao para contar quantos movimentos o cavalo faz para
+// capturar os peoes
+int contar_movimentos(int aux, int vis, int quant_peoes);
 
 
 int main()
 {
-    int comprimento, largura, quant_peoes;
+    // Tabuleiro com numeros para facilitar comparacoes
+    int tabuleiro_int[MAX_SIZE][MAX_SIZE];
+    // Tabuleiro com as pecas em char
+    char tabuleiro_char[MAX_SIZE][MAX_SIZE];
+    
+    // array com as pecas e suas distancias
+    std::vector<int> peca, dist;
+    
+    // N, M e K. ID é o identificador da peça sendo analisada
+    int comprimento, largura, quant_peoes, id;
 
     std::cin >> comprimento >> largura >> quant_peoes;
 
-    int tabuleiro_int[MAX_SIZE][MAX_SIZE];
-    char tabuleiro_char[MAX_SIZE][MAX_SIZE];
 
     // Enquanto as variaveis não forem vazias
     while( (comprimento + largura + quant_peoes) != 0 )
     {
+        // Para a iteracao dos for
         int i, j;
 
         id = 1;
@@ -44,18 +52,18 @@ int main()
 
         for(i = 0; i < quant_peoes; i++)
             for(j = 0; j < quant_peoes; j++)
-                aux2[i][j] = (i != j) * INT_MAX;
+                array_aux2[i][j] = (i != j) * INT_MAX;
 
 
         i = j = 1;
 
 
-        // Percorre o tabuleiro_char
+        // Percorre o tabuleiro
         while(i <= comprimento)
         {
             while(j <= largura)
             {
-                // Verifica as posicoes do tabuleiro_char procurando o peao, o cavalo e as posicoes vazias
+                // Preenche o tabuleiro com os caracteres
                 std::cin >> tabuleiro_char[i][j];
 
                 switch (tabuleiro_char[i][j])
@@ -85,16 +93,18 @@ int main()
         }
 
 
+        // Para cada um dos peoes, buscar a peca
         for(i = 0; i < quant_peoes; i++)
-            bfs(peca[i], tabuleiro_int, tabuleiro_char, comprimento, largura);
+            search(peca[i], tabuleiro_int, tabuleiro_char, comprimento, largura);
 
 
+        // Marca as posicoes vazias com -1
         for(i = quant_peoes; i--;)
             for(j = (1 << quant_peoes); j > 0; j--) 
-                aux1[i][j] = -1;
+                array_aux1[i][j] = -1;
 
 
-        std::cout << tsp(0, 1, quant_peoes) << std::endl;
+        std::cout << contar_movimentos(0, 1, quant_peoes) << std::endl;
         peca.clear();
 
         std::cin >> comprimento >> largura >> quant_peoes;
@@ -104,7 +114,9 @@ int main()
 }
 
 
-void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_SIZE][MAX_SIZE], int comprimento, int largura)
+void search(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], 
+        char tabuleiro_char[MAX_SIZE][MAX_SIZE], int comprimento, 
+        int largura)
 {
     std::queue<int> fila;
     fila.push(s);
@@ -126,8 +138,8 @@ void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_S
 
         if (tabuleiro_int[i][j] > -1)
         {
-            int x = std::min(std::min(aux2[s][tabuleiro_int[i][j]], aux2[tabuleiro_int[i][j]][s]), dist[primeiro]);
-            aux2[s][tabuleiro_int[i][j]] = aux2[tabuleiro_int[i][j]][s] = x;
+            int x = std::min(std::min(array_aux2[s][tabuleiro_int[i][j]], array_aux2[tabuleiro_int[i][j]][s]), dist[primeiro]);
+            array_aux2[s][tabuleiro_int[i][j]] = array_aux2[tabuleiro_int[i][j]][s] = x;
         }
 
         int quant_peoes = 8;
@@ -151,19 +163,19 @@ void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_S
 }
 
 
-int tsp(int u, int vis, int quant_peoes)
+int contar_movimentos(int aux1, int vis, int quant_peoes)
 {
     if (vis == (1 << quant_peoes)-1) 
-        return aux2[u][0];
+        return array_aux2[aux1][0];
     
-    if (aux1[u][vis]!=-1)
-        return aux1[u][vis];
+    if (array_aux1[aux1][vis]!=-1)
+        return array_aux1[aux1][vis];
     
     int ans = INT_MAX;
     
     for (int i = 0; i < quant_peoes; i++)
     {
-        if (!(vis & (1 << i)))ans = std::min(ans, aux2[u][i] + tsp(i, vis | (1 << i), quant_peoes));
+        if (!(vis & (1 << i)))ans = std::min(ans, array_aux2[aux1][i] + contar_movimentos(i, vis | (1 << i), quant_peoes));
     }
-    return aux1[u][vis]=ans;
+    return array_aux1[aux1][vis]=ans;
 }
