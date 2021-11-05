@@ -11,71 +11,90 @@
 #define MAX_SIZE 1024
 
 int n, m, k, orig, dj[] = {-2,-1,1,2,2,1,-1,-2};
-int di[] = {-1,-2,-2,-1,1,2,2,-1}, memo[16][1<<16], adj[1<<4][1<<4], t[MAX_SIZE][MAX_SIZE], id;
+int di[] = {-1,-2,-2,-1,1,2,2,-1};
 
-char tabuleiro[MAX_SIZE][MAX_SIZE];
+int aux1[16][1<<16];
+int aux2[1<<4][1<<4];
+
+int id;
 
 std::vector<int> peca, dist;
 
-// Realiza uma busca por BFS
-void bfs(int s);
+// Realiza uma busca por BFS utilizando os dois tabuleiros
+void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_SIZE][MAX_SIZE]);
 
 int tsp(int u, int vis);
+
 
 int main()
 {
     std::cin >> n >> m >> k;
 
-    while( (n + m + k) != 0 ){
-        
+
+    int tabuleiro_int[MAX_SIZE][MAX_SIZE];
+    char tabuleiro_char[MAX_SIZE][MAX_SIZE];
+
+    // Enquanto as variaveis não forem vazias
+    while( (n + m + k) != 0 )
+    {
+        int i, j;
+
         id = 1;
         k++;
-        
-        for(int i = 0; i < k; i++)
-            for(int j = 0; j < k; j++)
-                adj[i][j] = (i != j) * INT_MAX;
+
+        for(i = 0; i < k; i++)
+            for(j = 0; j < k; j++)
+                aux2[i][j] = (i != j) * INT_MAX;
 
 
-        for(int i = 1; i <= n; i++)
+        i = j = 1;
+
+
+        // Percorre o tabuleiro_char
+        while(i <= n)
         {
-            for(int j = 1; j <= m; j++)
+            while(j <= m)
             {
-                std::cin >> tabuleiro[i][j];
+                // Verifica as posicoes do tabuleiro_char procurando o peao, o cavalo e as posicoes vazias
+                std::cin >> tabuleiro_char[i][j];
 
-                switch (tabuleiro[i][j])
+                switch (tabuleiro_char[i][j])
                 {
                     case 'P':
-                        t[i][j] = id++;
+                        tabuleiro_int[i][j] = id++;
                         peca.push_back(i * (m+2) + j);
                         break;
                     
                     case 'C':
-                        t[i][j] = 0;
+                        tabuleiro_int[i][j] = 0;
                         peca.insert(peca.begin(), (i)*(m+2)+(j));
                         break;
 
                     case '.':
-                        t[i][j] = -1;
+                        tabuleiro_int[i][j] = -1;
                         break;
 
                     default:
-                        t[i][j] = -2;
+                        tabuleiro_int[i][j] = -2;
                         break;
                 }
+                j++;
             }
+            j = 1;
+            i++;
         }
 
 
-        for(int i = 0; i < k; i++)
-            bfs(peca[i]);
+        for(i = 0; i < k; i++)
+            bfs(peca[i], tabuleiro_int, tabuleiro_char);
 
 
-        for(int i = k; i--;) 
-            for(int j = (1<<k); j > 0; j--) 
-                memo[i][j] = -1;
+        for(i = k; i--;)
+            for(j = (1<<k); j > 0; j--) 
+                aux1[i][j] = -1;
 
 
-        std::cout<<tsp(0,1)<<std::endl;
+        std::cout << tsp(0,1) << std::endl;
         peca.clear();
 
         std::cin >> n >> m >> k;
@@ -84,27 +103,27 @@ int main()
     return 0;
 }
 
-void bfs(int s)
+void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_SIZE][MAX_SIZE])
 {
     std::queue<int> fila;
     fila.push(s);
 
     std::vector<int> dist = std::vector<int> ( (n + 2) * (m + 2) + 10, INT_MAX); 
     dist[s] = 0;
-    s = t[s / (m+2)][s % (m+2)];
+    s = tabuleiro_int[s / (m+2)][s % (m+2)];
     
     while (!fila.empty())
     {
-        int u = fila.front(); 
+        int primeiro = fila.front(); 
         fila.pop();
         
-        int i = u / (m+2);
-        int j = u % (m+2);
+        int i = primeiro / (m+2);
+        int j = primeiro % (m+2);
 
-        if (t[i][j] > -1)
+        if (tabuleiro_int[i][j] > -1)
         {
-            int x = std::min(std::min(adj[s][t[i][j]], adj[t[i][j]][s]), dist[u]);
-            adj[s][t[i][j]] = adj[t[i][j]][s] = x;
+            int x = std::min(std::min(aux2[s][tabuleiro_int[i][j]], aux2[tabuleiro_int[i][j]][s]), dist[primeiro]);
+            aux2[s][tabuleiro_int[i][j]] = aux2[tabuleiro_int[i][j]][s] = x;
         }
 
         int k = 8;
@@ -116,9 +135,9 @@ void bfs(int s)
 
             int v = (a * (m+2) + b);
             
-            if ((1<=(a) && (a)<=n && 1<=(b) && (b)<=m) && tabuleiro[a][b]!='#' && dist[v]==INT_MAX)
+            if ((1<=(a) && (a)<=n && 1<=(b) && (b)<=m) && tabuleiro_char[a][b]!='#' && dist[v]==INT_MAX)
             {
-                dist[v] = dist[u]+1;
+                dist[v] = dist[primeiro]+1;
                 fila.push(v);
             }
 
@@ -131,16 +150,16 @@ void bfs(int s)
 int tsp(int u, int vis)
 {
     if (vis == (1<<k)-1) 
-        return adj[u][0];
+        return aux2[u][0];
     
-    if (memo[u][vis]!=-1)
-        return memo[u][vis];
+    if (aux1[u][vis]!=-1)
+        return aux1[u][vis];
     
     int ans = INT_MAX;
     
     for (int i = 0; i < k; i++)
     {
-        if (!(vis & (1 << i)))ans = std::min(ans, adj[u][i] + tsp(i, vis | (1 << i)));
+        if (!(vis & (1 << i)))ans = std::min(ans, aux2[u][i] + tsp(i, vis | (1 << i)));
     }
-    return memo[u][vis]=ans;
+    return aux1[u][vis]=ans;
 }
