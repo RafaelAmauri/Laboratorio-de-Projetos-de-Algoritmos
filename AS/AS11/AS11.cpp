@@ -2,7 +2,7 @@
 // Tarefa: AS11 - Backtracking
 // Professor: Wladmir Cardoso
 // Matéria: LPA
-// Complexidade: O(M*N), onde M e N são as dimensões do tabuleiro
+// Complexidade: O(largura*comprimento), onde largura e comprimento são as dimensões do tabuleiro
 
 
 #include <bits/stdc++.h>
@@ -10,41 +10,40 @@
 
 #define MAX_SIZE 1024
 
-int orig, dj[] = {-2,-1,1,2,2,1,-1,-2};
-int di[] = {-1,-2,-2,-1,1,2,2,-1};
+int orig, id;
 
 int aux1[16][1<<16];
 int aux2[1<<4][1<<4];
 
-int id;
 
 std::vector<int> peca, dist;
 
 // Realiza uma busca por BFS utilizando os dois tabuleiros
-void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_SIZE][MAX_SIZE], int N, int M);
+void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_SIZE][MAX_SIZE], int comprimento, int largura);
 
-int tsp(int u, int vis, int K);
+// Recebe 
+int tsp(int aux, int vis, int quant_peoes);
 
 
 int main()
 {
-    int N, M, K;
+    int comprimento, largura, quant_peoes;
 
-    std::cin >> N >> M >> K;
+    std::cin >> comprimento >> largura >> quant_peoes;
 
     int tabuleiro_int[MAX_SIZE][MAX_SIZE];
     char tabuleiro_char[MAX_SIZE][MAX_SIZE];
 
     // Enquanto as variaveis não forem vazias
-    while( (N + M + K) != 0 )
+    while( (comprimento + largura + quant_peoes) != 0 )
     {
         int i, j;
 
         id = 1;
-        K++;
+        quant_peoes++;
 
-        for(i = 0; i < K; i++)
-            for(j = 0; j < K; j++)
+        for(i = 0; i < quant_peoes; i++)
+            for(j = 0; j < quant_peoes; j++)
                 aux2[i][j] = (i != j) * INT_MAX;
 
 
@@ -52,9 +51,9 @@ int main()
 
 
         // Percorre o tabuleiro_char
-        while(i <= N)
+        while(i <= comprimento)
         {
-            while(j <= M)
+            while(j <= largura)
             {
                 // Verifica as posicoes do tabuleiro_char procurando o peao, o cavalo e as posicoes vazias
                 std::cin >> tabuleiro_char[i][j];
@@ -63,12 +62,12 @@ int main()
                 {
                     case 'P':
                         tabuleiro_int[i][j] = id++;
-                        peca.push_back(i * (M + 2) + j);
+                        peca.push_back(i * (largura + 2) + j);
                         break;
                     
                     case 'C':
                         tabuleiro_int[i][j] = 0;
-                        peca.insert(peca.begin(), (i)*(M + 2) + (j));
+                        peca.insert(peca.begin(), (i)*(largura + 2) + (j));
                         break;
 
                     case '.':
@@ -86,40 +85,44 @@ int main()
         }
 
 
-        for(i = 0; i < K; i++)
-            bfs(peca[i], tabuleiro_int, tabuleiro_char, N, M);
+        for(i = 0; i < quant_peoes; i++)
+            bfs(peca[i], tabuleiro_int, tabuleiro_char, comprimento, largura);
 
 
-        for(i = K; i--;)
-            for(j = (1 << K); j > 0; j--) 
+        for(i = quant_peoes; i--;)
+            for(j = (1 << quant_peoes); j > 0; j--) 
                 aux1[i][j] = -1;
 
 
-        std::cout << tsp(0, 1, K) << std::endl;
+        std::cout << tsp(0, 1, quant_peoes) << std::endl;
         peca.clear();
 
-        std::cin >> N >> M >> K;
+        std::cin >> comprimento >> largura >> quant_peoes;
     }
 
     return 0;
 }
 
-void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_SIZE][MAX_SIZE], int N, int M)
+
+void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_SIZE][MAX_SIZE], int comprimento, int largura)
 {
     std::queue<int> fila;
     fila.push(s);
 
-    std::vector<int> dist = std::vector<int> ( (N + 2) * (M + 2) + 10, INT_MAX); 
+    int distancias_1[] = {-1,-2,-2,-1,1,2,2,-1};
+    int distancias_2[] = {-2,-1,1,2,2,1,-1,-2};
+
+    std::vector<int> dist = std::vector<int> ( (comprimento + 2) * (largura + 2) + 10, INT_MAX);
     dist[s] = 0;
-    s = tabuleiro_int[s / (M+2)][s % (M+2)];
+    s = tabuleiro_int[s / (largura+2)][s % (largura+2)];
     
     while (!fila.empty())
     {
-        int primeiro = fila.front(); 
+        int primeiro = fila.front();
         fila.pop();
         
-        int i = primeiro / (M + 2);
-        int j = primeiro % (M + 2);
+        int i = primeiro / (largura + 2);
+        int j = primeiro % (largura + 2);
 
         if (tabuleiro_int[i][j] > -1)
         {
@@ -127,30 +130,30 @@ void bfs(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE], char tabuleiro_char[MAX_S
             aux2[s][tabuleiro_int[i][j]] = aux2[tabuleiro_int[i][j]][s] = x;
         }
 
-        int k = 8;
+        int quant_peoes = 8;
 
-        while(k > 0)
+        while(quant_peoes > 0)
         {
-            int a = i + di[k];
-            int b = j + dj[k];
+            int a = i + distancias_1[quant_peoes];
+            int b = j + distancias_2[quant_peoes];
 
-            int v = (a * (M + 2) + b);
+            int v = (a * (largura + 2) + b);
             
-            if ((1<=(a) && (a) <= N && 1 <= (b) && (b) <= M) && tabuleiro_char[a][b]!='#' && dist[v]==INT_MAX)
+            if ((1<=(a) && (a) <= comprimento && 1 <= (b) && (b) <= largura) && tabuleiro_char[a][b]!='#' && dist[v]==INT_MAX)
             {
                 dist[v] = dist[primeiro]+1;
                 fila.push(v);
             }
 
-            k--;
+            quant_peoes--;
         }
     }
 }
 
 
-int tsp(int u, int vis, int K)
+int tsp(int u, int vis, int quant_peoes)
 {
-    if (vis == (1 << K)-1) 
+    if (vis == (1 << quant_peoes)-1) 
         return aux2[u][0];
     
     if (aux1[u][vis]!=-1)
@@ -158,9 +161,9 @@ int tsp(int u, int vis, int K)
     
     int ans = INT_MAX;
     
-    for (int i = 0; i < K; i++)
+    for (int i = 0; i < quant_peoes; i++)
     {
-        if (!(vis & (1 << i)))ans = std::min(ans, aux2[u][i] + tsp(i, vis | (1 << i), K));
+        if (!(vis & (1 << i)))ans = std::min(ans, aux2[u][i] + tsp(i, vis | (1 << i), quant_peoes));
     }
     return aux1[u][vis]=ans;
 }
