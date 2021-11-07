@@ -5,7 +5,9 @@
 // Complexidade: O(N*M), onde largura e comprimento são as dimensões do tabuleiro
 
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <queue>
+#include <climits>
 #include <vector>
 
 #define MAX_SIZE 1024
@@ -22,7 +24,7 @@ void search(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE],
 
 // Faz uma verificacao para contar quantos movimentos o cavalo faz para
 // capturar os peoes
-int contar_movimentos(int aux, int vis, int quant_peoes);
+int capturar_peoes(int aux, int vis, int quant_peoes);
 
 
 int main()
@@ -104,7 +106,7 @@ int main()
                 array_aux1[i][j] = -1;
 
 
-        std::cout << contar_movimentos(0, 1, quant_peoes) << std::endl;
+        std::cout << capturar_peoes(0, 1, quant_peoes) << std::endl;
         peca.clear();
 
         std::cin >> comprimento >> largura >> quant_peoes;
@@ -163,7 +165,7 @@ void search(int s, int tabuleiro_int[MAX_SIZE][MAX_SIZE],
 }
 
 
-int contar_movimentos(int aux1, int vis, int quant_peoes)
+int capturar_peoes(int aux1, int vis, int quant_peoes)
 {
     if (vis == (1 << quant_peoes)-1) 
         return array_aux2[aux1][0];
@@ -175,7 +177,7 @@ int contar_movimentos(int aux1, int vis, int quant_peoes)
     
     for (int i = 0; i < quant_peoes; i++)
     {
-        if (!(vis & (1 << i)))ans = std::min(ans, array_aux2[aux1][i] + contar_movimentos(i, vis | (1 << i), quant_peoes));
+        if (!(vis & (1 << i)))ans = std::min(ans, array_aux2[aux1][i] + capturar_peoes(i, vis | (1 << i), quant_peoes));
     }
     return array_aux1[aux1][vis]=ans;
 }
