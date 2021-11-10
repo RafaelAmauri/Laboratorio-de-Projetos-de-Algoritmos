@@ -1,7 +1,7 @@
 // Aluno: Rafael Amauri Diniz Augusto -- 651047
-// Tarefa: AS11 - Backtracking
-// Professor: Wladmir Cardoso
-// Matéria: LPA
+// Tarefa: Cavalo
+// ID da Tarefa: 1513
+// URL da Tarefa: https://www.beecrowd.com.br/judge/pt/problems/view/1513
 // Complexidade: O(N*M), onde largura e comprimento são as dimensões do tabuleiro
 
 
