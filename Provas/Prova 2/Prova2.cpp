@@ -1,6 +1,7 @@
-// Rafael Amauri Diniz Augusto - 651047
-// Prova 2
-// Professor: Wladimir Cardoso Brandão
+// Autor: Rafael Amauri
+// Tarefa: Expensive Subway
+// ID da Tarefa: 11710
+// URL da Tarefa: https://onlinejudge.org/external/117/11710.pdf
 // Complexidade: O(N^2), onde N é o número de vértices
 
 
